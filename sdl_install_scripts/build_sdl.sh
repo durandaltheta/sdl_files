@@ -8,7 +8,7 @@ USAGE( )
     echo "  --git_user) USAGE: --git_user exampleusername"
     echo "  --git_email) USAGE: --git_email exampleemail@webserver.com"
     echo "  --install_missing_programs)"
-    echo "  -i|--create_agl_image) REQUIRES: --agl_source, --platform"
+    echo "  -i|--build_agl_image) REQUIRES: --agl_source, --platform"
     echo "  -c|--build_and_install_agl_crosssdk) REQUIRES: --agl_source, --crosssdk"
     echo "  -s|--agl_source) USAGE: --agl_source \"-b chinook -m chinook_3.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo\""
     echo "  -t|--agl_target) USAGE: --agl_target \"-f -m raspberrypi3 agl-demo agl-netboot agl-appfw-smack\""
@@ -29,7 +29,7 @@ FIRST_TIME_SETUP=false
 GIT_USER=""
 GIT_EMAIL=""
 INSTALL_MISSING_PROGRAMS=false
-CREATE_AGL_IMAGE=false 
+BUILD_AGL_IMAGE=false 
 BUILD_AND_INSTALL_AGL_CROSSSDK=false
 AGL_SOURCE="-b chinook -m chinook_3.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo"
 AGL_TARGET="-f -m raspberrypi3 agl-demo agl-netboot agl-appfw-smack"
@@ -59,8 +59,8 @@ do
         --install_missing_programs)
             INSTALL_MISSING_PROGRAMS=true
             ;;
-        -i|--create_agl_image)
-            CREATE_AGL_IMAGE=true
+        -i|--build_agl_image)
+            BUILD_AGL_IMAGE=true
             ;;
         -c|--build_and_install_agl_crosssdk) 
             BUILD_AND_INSTALL_AGL_CROSSSDK=true
@@ -118,7 +118,7 @@ then
     fi 
 fi  
 
-if [ "$CREATE_AGL_IMAGE" = true ];
+if [ "$BUILD_AGL_IMAGE" = true ];
 then 
     if [ -z "$AGL_SOURCE" ];
     then
@@ -202,7 +202,7 @@ then
 fi
 
 # initialize source 
-if [ "$CREATE_AGL_IMAGE" = true ] || [ "$INSTALL_AGL_CROSSSDK" = true ];
+if [ "$BUILD_AGL_IMAGE" = true ] || [ "$INSTALL_AGL_CROSSSDK" = true ];
 then
     cd $AGL_TOP
     repo init $AGL_SOURCE 
@@ -211,7 +211,7 @@ then
 fi
 
 # build AGL image 
-if [ "$CREATE_AGL_IMAGE" = true ];
+if [ "$BUILD_AGL_IMAGE" = true ];
 then
     bitbake $PLATFORM
 fi
