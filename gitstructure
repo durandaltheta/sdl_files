@@ -1,0 +1,16 @@
+main script
+-------------------------
+build_sdl.sh 
+
+driver scripts
+-------------------------
+first_time_setup.sh 
+install_cross_sdk.sh
+bake_new_image.sh
+install_image_to_sdcard.sh 
+build_and_package_sdl.sh 
+
+
+scripts/
+units/
+

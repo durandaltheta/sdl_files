@@ -1,0 +1,13 @@
+[Unit]
+Description=Fix bluetooth for dongle
+After=systemd-rfkill.service
+Requires=systemd-rfkill.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/rfkill-unblock-delayed
+ExecStop=
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

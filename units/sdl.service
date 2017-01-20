@@ -1,0 +1,14 @@
+[Unit]
+Description=SDL and associated Demo HMI
+After=graphical.target
+
+[Service]
+Type=forking
+#ExecStartPre=/bin/touch /var/lib/dhcp/dhcpd.leases
+#ExecStart=/usr/sbin/dhcpd -f -cf /etc/dhcp/dhcpd.conf -pf /var/run/dhcpd.pid $DHCPDARGS -q $INTERFACES
+Environment="XDG_RUNTIME_DIR=/run/user/0"
+ExecStart=/bin/bash -c '/home/rw/sdl_core/start_all.sh 5 > /home/rw/sdl_core/start_all.log 2>&1'
+ExecStop=/bin/bash -c '/home/rw/sdl_core/kill_all.sh > /home/rw/sdl_core/kill_all.log 2>&1'
+
+[Install]
+WantedBy=multi-user.target
