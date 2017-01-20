@@ -4,16 +4,17 @@ USAGE( )
 {
     echo "-------------------"
     echo "$0 valid arguments:"
-    echo "  --first_time_setup) REQUIRES: --git_user; --git_email"
+    echo "  --first_time_setup) REQUIRES: --git_user, --git_email; RECOMMENDED: --install_missing_programs "
     echo "  --git_user) USAGE: --git_user exampleusername"
     echo "  --git_email) USAGE: --git_email exampleemail@webserver.com"
-    echo "  -i|--create_agl_image) REQUIRES: --agl_source; --platform"
-    echo "  -c|--build_and_install_agl_crosssdk) REQUIRES: --agl_source; --crosssdk"
+    echo "  --install_missing_programs)"
+    echo "  -i|--create_agl_image) REQUIRES: --agl_source, --platform"
+    echo "  -c|--build_and_install_agl_crosssdk) REQUIRES: --agl_source, --crosssdk"
     echo "  -s|--agl_source) USAGE: --agl_source \"-b chinook -m chinook_3.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo\""
     echo "  -t|--agl_target) USAGE: --agl_target \"-f -m raspberrypi3 agl-demo agl-netboot agl-appfw-smack\""
     echo "  -p|--platform) USAGE: --platform agl-demo-platform"
     echo "  -c|--crosssdk) USAGE: --crosssdk agl-demo-platform-crosssdk"
-    echo "  --install_image) REQUIRES: --sdcard; --platform"
+    echo "  --install_image) REQUIRES: --sdcard, --platform"
     echo "  --sdcard) USAGE: --sdcard /dev/sdb"
     echo "  --build_and_package_sdl) REQUIRES: --crosssdk"
 }
@@ -27,6 +28,7 @@ cd $AGL_TOP
 FIRST_TIME_SETUP=false 
 GIT_USER=""
 GIT_EMAIL=""
+INSTALL_MISSING_PROGRAMS=false
 CREATE_AGL_IMAGE=false 
 BUILD_AND_INSTALL_AGL_CROSSSDK=false
 AGL_SOURCE="-b chinook -m chinook_3.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo"
@@ -53,6 +55,9 @@ do
         --git_email)
             GIT_EMAIL=$2
             shift
+            ;;
+        --install_missing_programs)
+            INSTALL_MISSING_PROGRAMS=true
             ;;
         -i|--create_agl_image)
             CREATE_AGL_IMAGE=true
@@ -176,12 +181,16 @@ fi
 #----------------------------
 # SETUP AGL BUILD
 
+# install/update missing programs 
+if [ "$INSTALL_MISSING_PROGRAMS" = true ];
+then 
+    sudo apt update
+    sudo apt install make cmake gcc git vim gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat libsdl1.2-dev xterm cpio curl autoconf subversion
+fi 
+
 # setup yocto for first time 
 if [ "$FIRST_TIME_SETUP" = true ];
 then 
-    # install/update missing programs 
-    sudo apt update
-    sudo apt install make cmake gcc git vim gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat libsdl1.2-dev xterm cpio curl autoconf subversion
     mkdir -p $AGL_TOP
     mkdir ~/bin
     export PATH=~/bin:$PATH
