@@ -207,7 +207,7 @@ then
     cd $AGL_TOP
     repo init $AGL_SOURCE 
     repo sync 
-    source meta-agl/scripts/aglsetup $AGL_TARGET
+    source meta-agl/scripts/aglsetup.sh $AGL_TARGET
 fi
 
 # build AGL image 
