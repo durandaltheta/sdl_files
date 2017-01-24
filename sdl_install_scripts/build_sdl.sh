@@ -235,7 +235,7 @@ fi
 if [ "$INSTALL_IMAGE" = true ];
 then
     #umount all partitions 
-    sudo umount $SDCARD?*
+    sudo umount $SDCARD*
 
     #burn AGL image to sd card
     sudo dd if=tmp/deploy/images/raspberrypi3/${PLATFORM}-raspberrypi3.rpi-sdimg of=$SDCARD bs=4M 
