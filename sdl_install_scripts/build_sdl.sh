@@ -11,7 +11,7 @@ USAGE( )
     echo "  -i|--build_agl_image) REQUIRES: --agl_source, --platform"
     echo "  -c|--build_and_install_agl_crosssdk) REQUIRES: --agl_source, --crosssdk"
     echo "  -s|--agl_source) USAGE: --agl_source \"-b chinook -m chinook_3.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo\""
-    echo "  -t|--agl_target) USAGE: --agl_target \"-f -m raspberrypi3 agl-demo agl-netboot agl-appfw-smack\""
+    echo "  -t|--agl_target) USAGE: --agl_target \"-f -m raspberrypi3 agl-demo agl-netboot agl-appfw-smack agl-sota\""
     echo "  -p|--platform) USAGE: --platform agl-demo-platform"
     echo "  -c|--crosssdk) USAGE: --crosssdk agl-demo-platform-crosssdk"
     echo "  --install_image) REQUIRES: --sdcard, --platform"
@@ -32,7 +32,7 @@ INSTALL_MISSING_PROGRAMS=false
 BUILD_AGL_IMAGE=false 
 BUILD_AND_INSTALL_AGL_CROSSSDK=false
 AGL_SOURCE="-b chinook -m chinook_3.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo"
-AGL_TARGET="-f -m raspberrypi3 agl-demo agl-netboot agl-appfw-smack"
+AGL_TARGET="-f -m raspberrypi3 agl-demo agl-netboot agl-appfw-smack agl-sota"
 PLATFORM="agl-demo-platform"
 CROSSSDK="agl-demo-platform-crosssdk"
 INSTALL_IMAGE=false
@@ -126,6 +126,12 @@ then
         USAGE
         exit
     fi 
+    if [ -z "$AGL_TARGET" ];
+    then
+        echo "ERROR: must provide selected agl_target via --agl_target "arguments string". Ex: --agl_target \"-b chinook -m chinook_3.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo\""
+        USAGE
+        exit
+    fi 
     if [ -z "$PLATFORM" ];
     then
         echo "ERROR: must provide selected platform via --platform platform-of-choice. Ex: --platform agl-demo-platform"
@@ -139,6 +145,12 @@ then
     if [ -z "$AGL_SOURCE" ];
     then
         echo "ERROR: must provide selected agl_source via --agl_source "arguments and source url". Ex: --agl_source \"-b chinook -m chinook_3.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo\""
+        USAGE
+        exit
+    fi 
+    if [ -z "$AGL_TARGET" ];
+    then
+        echo "ERROR: must provide selected agl_target via --agl_target "arguments string". Ex: --agl_target \"-b chinook -m chinook_3.0.0.xml -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo\""
         USAGE
         exit
     fi 
@@ -202,12 +214,12 @@ then
 fi
 
 # initialize source 
-if [ "$BUILD_AGL_IMAGE" = true ] || [ "$INSTALL_AGL_CROSSSDK" = true ];
+if [ "$BUILD_AGL_IMAGE" = true ] || [ "$BUILD_AND_INSTALL_AGL_CROSSSDK" = true ];
 then
     cd $AGL_TOP
     repo init $AGL_SOURCE 
     repo sync 
-    source meta-agl/scripts/aglsetup.sh $AGL_TARGET
+    source $AGL_TOP/meta-agl/scripts/aglsetup.sh $AGL_TARGET
 fi
 
 # build AGL image 
